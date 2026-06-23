@@ -5,6 +5,10 @@ const boardElement = document.getElementById("board");
 let currentPlayer = "player";
 let board = Array.from({ length: ROWS }, () => Array(COLS).fill(null));
 
+const dropdownTrigger = document.getElementById("dropdownTrigger");
+const dropdownOptions = document.getElementById("dropdownOptions");
+const selectedText = document.getElementById("selectedDifficultyText");
+
 // --- UPGRADED AUDIO SYSTEM WITH AUTO-LOOP BGM MANAGER ---
 const sounds = {
     drop: new Audio('assets/sounds/disc_drop.mp3'),
@@ -14,6 +18,35 @@ const sounds = {
     lose: new Audio('assets/sounds/game_lose.mp3'),
     bgm: new Audio('assets/sounds/home_theme.mp3') // Added Home Theme BGM track
 };
+
+dropdownTrigger.addEventListener("click", (e) => {
+    e.stopPropagation(); // Prevents instant closing
+    if (typeof playSound === "function") playSound('click'); // Plays click sound if loaded
+    dropdownOptions.classList.toggle("hidden");
+});
+
+document.querySelectorAll(".dropdown-option").forEach(option => {
+    option.addEventListener("click", (e) => {
+        const val = e.target.getAttribute("data-value");
+        selectedText.textContent = e.target.textContent;
+        
+        // Mocking native select value storage mapping
+        // game engine difficultySelect dynamic configuration reference override:
+        difficultySelect.value = val; 
+
+        dropdownOptions.classList.add("hidden");
+        if (typeof playSound === "function") playSound('click');
+    });
+});
+
+// Close dropdown automatically if user clicks anywhere else outside the menu box
+document.addEventListener("click", () => {
+    dropdownOptions.classList.add("hidden");
+});
+
+// --- CORE FIX: COMPATIBILITY LAYER FOR GAME ENGINE ---
+// Game engine script difficultySelect select variables use பண்ணுது, so fake wrapper variable set பண்றோம்:
+let difficultySelect = { value: "easy" }; // Default core level configuration node
 
 // Configure background music setup properties
 sounds.bgm.loop = true;  // Loops indefinitely

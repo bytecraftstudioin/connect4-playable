@@ -669,3 +669,85 @@ button {
     white-space: nowrap;
     overflow: visible; /* FIXED: Never chops numbers or cuts edges! */
 }
+
+.custom-dropdown-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #402008; /* Dark brown wrapper row background */
+    padding: 10px 14px;
+    border-radius: 16px;
+    width: 100%;
+    max-width: 340px;
+    margin: 10px auto;
+    box-sizing: border-box;
+}
+
+.difficulty-label {
+    font-family: sans-serif; /* Use your game font variable if you have one */
+    font-weight: 900;
+    color: #fde047; /* Yellow pop label text */
+    font-size: 14px;
+}
+
+.custom-dropdown {
+    position: relative;
+    width: 130px;
+}
+
+.dropdown-trigger {
+    background: #fffbef;
+    border: 3px solid #663914;
+    border-radius: 10px;
+    padding: 6px 10px;
+    font-weight: 900;
+    font-size: 14px;
+    color: #663914;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    box-shadow: 0 3px 0 #663914;
+    user-select: none;
+}
+
+.dropdown-arrow {
+    font-size: 10px;
+    margin-left: 5px;
+    color: #663914;
+}
+
+/* Custom Dropdown List Container Box */
+.dropdown-options {
+    position: absolute;
+    top: calc(100% + 5px);
+    left: 0;
+    width: 100%;
+    background: #fffbef;
+    border: 3px solid #663914;
+    border-radius: 10px;
+    box-shadow: 0 5px 0 #663914;
+    z-index: 1000;
+    overflow: hidden;
+}
+
+.dropdown-options.hidden {
+    display: none;
+}
+
+.dropdown-option {
+    padding: 8px 12px;
+    font-weight: 800;
+    font-size: 14px;
+    color: #663914;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.dropdown-option:not(:last-child) {
+    border-bottom: 2px solid #663914;
+}
+
+.dropdown-option:hover {
+    background: #fde047; /* Highlights row on hover/tap */
+}

@@ -28,11 +28,20 @@
 
         <div class="difficulty-container">
             <label>Difficulty:</label>
-            <select id="difficulty">
-                <option value="easy">Easy</option>
-                <option value="medium">Medium</option>
-                <option value="hard" selected>Hard</option>
-            </select>
+            <div class="custom-dropdown-wrapper">
+    <span class="difficulty-label">DIFFICULTY:</span>
+    <div class="custom-dropdown" id="difficultyDropdown">
+        <div class="dropdown-trigger" id="dropdownTrigger">
+            <span id="selectedDifficultyText">Easy</span>
+            <span class="dropdown-arrow">▼</span>
+        </div>
+        <div class="dropdown-options hidden" id="dropdownOptions">
+            <div class="dropdown-option" data-value="easy">Easy</div>
+            <div class="dropdown-option" data-value="medium">Medium</div>
+            <div class="dropdown-option" data-value="hard">Hard</div>
+        </div>
+    </div>
+</div>
         </div>
 
         <button id="playBtn">▶ Play Game</button>
