@@ -1,0 +1,671 @@
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@600;900&display=swap');
+
+/* GLOBAL STYLES */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Fredoka', sans-serif;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    min-height: 100vh;
+    /* Soft sky blue to playful royal blue gradient for a friendly kid atmosphere */
+    background: radial-gradient(circle, #38bdf8 0%, #1d4ed8 70%, #1e1b4b 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow-x: hidden;
+    position: relative;
+}
+
+/* Fun Bubble Pattern Background */
+body::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-image: radial-gradient(rgba(255, 255, 255, 0.2) 15%, transparent 18%);
+    background-size: 35px 35px;
+    opacity: 0.7;
+    z-index: 0;
+    pointer-events: none;
+}
+
+/* HOMESCREEN UPGRADED TO RESPONSIVE CASUAL WOODEN FRAME */
+#home-screen {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 90%;
+    max-width: 380px; /* Kept tight to fit perfectly on all mobile aspects */
+    background: linear-gradient(180deg, #ffd36f 0%, #e89833 100%);
+    border: 5px solid #663914;
+    border-radius: 28px;
+    padding: 20px 15px; /* Reduced vertical padding to prevent screen overflow */
+    box-shadow: 0 12px 0 #422209, 0 20px 25px rgba(0, 0, 0, 0.4);
+    text-align: center;
+    margin: 10px auto;
+}
+
+#game-screen {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 440px;
+    padding: 20px;
+    text-align: center;
+}
+
+/* 3D POPPING GAME TITLES - DYNAMIC RESPONSIVE SIZE */
+h1 {
+    font-size: clamp(24px, 7vw, 34px); /* Perfectly scales down on 320px screens */
+    font-weight: 900;
+    color: #ffffff;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 20px;
+    text-shadow: 0 4px 0 #dc2626, 0 7px 0 #663914, 0 10px 15px rgba(0, 0, 0, 0.4);
+    background: linear-gradient(180deg, #ff4e4e 0%, #dc2626 100%);
+    padding: 8px 15px;
+    border-radius: 18px;
+    border: 4px solid #663914;
+    box-shadow: 0 5px 0 #663914;
+    width: 100%; /* Keeps it perfectly locked inside the wooden container */
+    box-sizing: border-box;
+    transform: rotate(-1deg);
+}
+
+h2 {
+    font-size: 32px;
+    color: #ffffff;
+    text-transform: uppercase;
+    text-shadow: 0 5px 0 #1e40af, 0 10px 0 #0f172a;
+    margin-bottom: 25px;
+}
+
+/* DIFFICULTY MANAGER */
+.difficulty-container {
+    background: #422209;
+    padding: 8px 14px;
+    border-radius: 16px;
+    border: 3px solid #663914;
+    margin-bottom: 18px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: inset 0 4px 8px rgba(0,0,0,0.4);
+    box-sizing: border-box;
+}
+.difficulty-container label {
+    color: #ffd36f;
+    font-weight: 900;
+    text-transform: uppercase;
+    font-size: 12px;
+    text-shadow: 1px 1px 0px rgba(0,0,0,0.5);
+}
+#difficulty {
+    background: #fffbeb;
+    color: #b45309;
+    border: 3px solid #663914;
+    padding: 4px 8px;
+    border-radius: 10px;
+    font-weight: 900;
+    font-size: 13px;
+    cursor: pointer;
+    box-shadow: 0 2px 0 #663914;
+}
+
+/* MAIN BUTTON BASE (Jelly Action style) */
+button {
+    font-family: 'Fredoka', sans-serif;
+    font-weight: 900;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    border: 4px solid #663914;
+    box-sizing: border-box; /* Strict boundaries */
+}
+
+/* GREEN PLAY BUTTON */
+#playBtn {
+    width: 100%;
+    max-width: 340px;
+    height: 65px;
+    font-size: 24px;
+    color: white;
+    background: linear-gradient(180deg, #4ade80 0%, #16a34a 100%);
+    border-radius: 20px;
+    box-shadow: 0 6px 0 #14532d, 0 8px 15px rgba(0, 0, 0, 0.2);
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 0px #14532d;
+}
+#playBtn:hover { transform: scale(1.02); }
+#playBtn:active { transform: translateY(4px); box-shadow: 0 2px 0 #14532d; }
+
+/* MENU SECONDARY BUTTONS STYLE */
+.menu-btn, #backBtn {
+    width: 100%;
+    max-width: 340px;
+    padding: 12px;
+    font-size: 16px;
+    color: white;
+    border-radius: 18px;
+    margin: 5px 0;
+}
+#dailyBtn { background: linear-gradient(180deg, #ff4e4e 0%, #dc2626 100%); box-shadow: 0 5px 0 #7f1d1d; text-shadow: 1px 1px 0px #7f1d1d;}
+#storeBtn { background: linear-gradient(180deg, #06b6d4 0%, #0369a1 100%); box-shadow: 0 5px 0 #075985; text-shadow: 1px 1px 0px #075985;}
+#statsBtn, #backBtn { background: linear-gradient(180deg, #a855f7 0%, #7e22ce 100%); box-shadow: 0 5px 0 #581c87; text-shadow: 1px 1px 0px #581c87;}
+
+.menu-btn:active, #backBtn:active { transform: translateY(4px); box-shadow: 0 1px 0 rgba(0,0,0,0.5); }
+/* ==========================================================================
+   UNIFIED 3D PREMIUM POPUPS (As seen in image_d3a1cd.jpg)
+   ========================================================================== */
+#daily-popup, #store-popup, #stats-popup, #popup {
+    position: fixed;
+    inset: 0;
+    background: rgba(10, 15, 30, 0.85);
+    backdrop-filter: blur(5px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.popup-content {
+    background: linear-gradient(180deg, #ffd36f 0%, #e89833 100%) !important;
+    border: 6px solid #663914 !important;
+    border-radius: 28px !important;
+    padding: 55px 22px 25px 22px !important;
+    box-shadow: 0 14px 0 #422209, 0 25px 30px rgba(0, 0, 0, 0.5) !important;
+    position: relative !important;
+    width: 90%;
+    max-width: 400px;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 12px !important;
+}
+
+/* CARTOON TITLE RIBBONS */
+.reward-ribbon {
+    background: linear-gradient(180deg, #ff4e4e 0%, #d31d1d 100%) !important;
+    color: white !important;
+    font-size: 24px !important;
+    font-weight: 900 !important;
+    padding: 8px 32px !important;
+    border-radius: 16px !important;
+    position: absolute !important;
+    top: -26px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    border: 4px solid #663914 !important;
+    box-shadow: 0 6px 0 #7f1d1d, 0 8px 15px rgba(0,0,0,0.3) !important;
+    text-shadow: 2px 2px 0px #7f1d1d !important;
+    text-transform: uppercase !important;
+    white-space: nowrap !important;
+    z-index: 999 !important;
+}
+.blue-ribbon { 
+    background: linear-gradient(180deg, #06b6d4 0%, #0284c7 100%) !important; 
+    box-shadow: 0 6px 0 #0369a1 !important; 
+    text-shadow: 2px 2px 0px #0369a1 !important; 
+}
+.purple-ribbon { 
+    background: linear-gradient(180deg, #b055ff 0%, #7e22ce 100%) !important; 
+    box-shadow: 0 6px 0 #581c87 !important; 
+    text-shadow: 2px 2px 0px #581c87 !important; 
+}
+.green-ribbon { 
+    background: linear-gradient(180deg, #4ade80 0%, #16a34a 100%) !important; 
+    box-shadow: 0 5px 0 #15803d !important; 
+    text-shadow: 2px 2px 0px #15803d !important;
+    width: 80% !important;
+}
+
+/* POPUP BUTTON SYSTEM (Fixes image_d3a1b0.jpg margins) */
+.popup-content button:not(.close-text-btn):not(#restartBtn):not(#claimRewardBtn) {
+    width: 100% !important;
+    padding: 14px 18px !important;
+    font-size: 18px !important;
+    color: #422209 !important;
+    background: linear-gradient(180deg, #ffffff 0%, #e2e8f0 100%) !important;
+    border-radius: 18px !important;
+    margin: 4px 0 !important;
+    border: 4px solid #663914 !important;
+    box-shadow: 0 5px 0 #663914 !important;
+    display: block !important;
+}
+.popup-content button:not(.close-text-btn):active { 
+    transform: translateY(4px) !important; 
+    box-shadow: 0 1px 0 #663914 !important; 
+}
+
+/* PRIMARY SUBMIT ACTIONS */
+#claimRewardBtn, #restartBtn {
+    width: 100% !important;
+    padding: 14px !important;
+    font-size: 20px !important;
+    color: white !important;
+    background: linear-gradient(180deg, #4ade80 0%, #15803d 100%) !important;
+    border-radius: 16px !important;
+    box-shadow: 0 5px 0 #14532d !important;
+    text-shadow: 1px 1px 0px #14532d !important;
+    margin-top: 10px;
+}
+#claimRewardBtn:disabled { background: #94a3b8 !important; box-shadow: 0 4px 0 #475569 !important; cursor: not-allowed; text-shadow: none !important; opacity: 0.7;}
+
+/* TEXT WINDOW FOOTERS */
+.close-text-btn {
+    background: transparent !important;
+    color: #422209 !important;
+    border: none !important;
+    margin-top: 10px !important;
+    font-size: 16px !important;
+    font-weight: 900 !important;
+    text-decoration: none !important;
+    border-bottom: 3px solid #422209 !important;
+    box-shadow: none !important;
+    align-self: center !important;
+    padding: 2px 4px !important;
+}
+.close-text-btn:active { transform: scale(0.95) !important; }
+
+/* DAILY REWARD GRID COMPONENTS */
+.daily-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin: 25px 0 5px 0;
+    background: rgba(66, 34, 9, 0.14);
+    padding: 12px;
+    border-radius: 18px;
+    width: 100%;
+}
+.day-box {
+    background: linear-gradient(180deg, #f8fafc 0%, #cbd5e1 100%);
+    border: 3px solid #475569 !important;
+    border-radius: 14px;
+    padding: 10px 4px;
+    color: #334155;
+    font-weight: 900;
+    font-size: 13px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    box-shadow: 0 4px 0 #475569;
+}
+.reward-coin { font-size: 24px; }
+.reward-amt { font-size: 13px; color: #fff; background: #475569; padding: 1px 10px; border-radius: 10px; }
+
+.day-box.mega-day {
+    grid-column: span 3;
+    background: linear-gradient(180deg, #fffbeb 0%, #fef08a 100%);
+    border-color: #ca8a04 !important;
+    box-shadow: 0 4px 0 #a16207;
+    flex-direction: row;
+    justify-content: space-around;
+    padding: 10px 15px;
+}
+.day-box.mega-day .reward-amt { background: #ca8a04; }
+.day-box.active-claim {
+    background: linear-gradient(180deg, #c084fc 0%, #9333ea 100%);
+    border-color: #fff !important;
+    box-shadow: 0 5px 0 #581c87;
+    color: #fff;
+}
+.day-box.active-claim .reward-amt { background: #581c87; }
+.day-box.claimed { background: #64748b; border-color: #334155 !important; box-shadow: 0 2px 0 #334155; opacity: 0.5; }
+
+/* MATCH HISTORY CONTAINER (Fixes image_d3a16f.png legibility) */
+#history-list {
+    margin-top: 15px !important;
+    margin-bottom: 5px !important;
+    border: 4px solid #663914 !important;
+    background: #422209 !important; 
+    border-radius: 18px !important;
+    padding: 10px !important;
+    box-shadow: inset 0 5px 10px rgba(0,0,0,0.4) !important;
+    max-height: 180px;
+    overflow-y: auto;
+    width: 100%;
+}
+#history-list div {
+    font-size: 16px !important;
+    font-weight: 900 !important;
+    padding: 12px 10px !important;
+    border-bottom: 3px solid #663914 !important;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8) !important;
+}
+#history-list div:last-child { border-bottom: none !important; }
+
+/* CONNECT 4 BOARD STYLES */
+#board {
+    width: min(92vw, 420px);
+    aspect-ratio: 7/6;
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 8px;
+    padding: 14px;
+    border-radius: 24px;
+    box-shadow: 0 12px 0 #15803d, 0 15px 25px rgba(0,0,0,0.4);
+    margin: 20px 0;
+    border: 6px solid #663914 !important;
+}
+
+/* ==========================================================================
+   THEME STORE GRID & BUTTONS SYSTEM
+   ========================================================================== */
+.store-grid {
+    display: grid;
+    grid-template-columns: 1fr; /* Single column flow for clean mobile stack */
+    gap: 12px; /* Breathing space between theme choices */
+    width: 100%;
+    padding: 10px 5px;
+    box-sizing: border-box;
+}
+
+/* Base style overrides to turn generic store elements into custom colored toy blocks */
+.store-grid button {
+    width: 100% !important;
+    padding: 16px 20px !important;
+    font-size: 18px !important;
+    font-weight: 900 !important;
+    color: #ffffff !important; /* Forces crisp text over colored backgrounds */
+    border-radius: 20px !important;
+    margin: 0 !important;
+    border: 4px solid #663914 !important;
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    text-transform: uppercase;
+    transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+
+/* INDIVIDUAL 3D PREMIUM THEME VARIATIONS */
+.store-grid button:nth-child(1), .classic { 
+    background: linear-gradient(180deg, #3b82f6 0%, #1d4ed8 100%) !important; 
+    box-shadow: 0 6px 0 #1e40af, 0 8px 12px rgba(0,0,0,0.2) !important;
+    text-shadow: 1px 1px 0px #1e40af !important;
+}
+
+.store-grid button:nth-child(2), .neon { 
+    background: linear-gradient(180deg, #10b981 0%, #047857 100%) !important; 
+    box-shadow: 0 6px 0 #065f46, 0 8px 12px rgba(0,0,0,0.2) !important;
+    text-shadow: 1px 1px 0px #065f46 !important;
+}
+
+.store-grid button:nth-child(3), .gold { 
+    background: linear-gradient(180deg, #f59e0b 0%, #b45309 100%) !important; 
+    box-shadow: 0 6px 0 #78350f, 0 8px 12px rgba(0,0,0,0.2) !important;
+    text-shadow: 1px 1px 0px #78350f !important;
+}
+
+.store-grid button:nth-child(4), .space { 
+    background: linear-gradient(180deg, #a855f7 0%, #6b21a8 100%) !important; 
+    box-shadow: 0 6px 0 #4c1d95, 0 8px 12px rgba(0,0,0,0.2) !important;
+    text-shadow: 1px 1px 0px #4c1d95 !important;
+}
+
+/* Click feedback to bounce nicely */
+.store-grid button:active { 
+    transform: translateY(4px) !important; 
+    box-shadow: 0 2px 0 #663914 !important; 
+}
+
+.cell {
+    aspect-ratio: 1;
+    background: #0f172a;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: inset 0 5px 5px rgba(0, 0, 0, 0.7);
+}
+
+/* CHIPS / DISCS */
+.player {
+    background: radial-gradient(circle at 35% 35%, #ff8787, #ef4444 60%, #991b1b 100%) !important;
+    box-shadow: inset 0 -4px 6px rgba(0,0,0,0.5), 0 4px 8px rgba(239, 68, 68, 0.4) !important;
+}
+.ai {
+    background: radial-gradient(circle at 35% 35%, #fef08a, #facc15 60%, #a16207 100%) !important;
+    box-shadow: inset 0 -4px 6px rgba(0,0,0,0.5), 0 4px 8px rgba(250, 204, 21, 0.4) !important;
+}
+
+/* TURN INDICATOR */
+#turn-indicator {
+    padding: 8px 20px;
+    border-radius: 50px;
+    font-size: 16px;
+    font-weight: 900;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    border: 3px solid #663914 !important;
+    box-shadow: 0 4px 0 #663914;
+}
+.player-turn { background: linear-gradient(180deg, #ff6b6b 0%, #dc2626 100%); color: white; }
+.ai-turn { background: linear-gradient(180deg, #ffe066 0%, #ca8a04 100%); color: #422209; }
+
+.hidden { display: none !important; }
+
+/* ==========================================================================
+   RESPONSIVE PREMIUM SNACKBAR SYSTEM (MOBILE FIRST)
+   ========================================================================== */
+.game-snackbar {
+    position: fixed;
+    bottom: -100px; /* Hidden initially at the bottom */
+    left: 50%;
+    transform: translateX(-50%) scale(0.9); /* Perfect center positioning */
+    
+    /* Mobile-First Responsive Boundaries */
+    width: 85%; /* Fluid percentage for small screens */
+    max-width: 360px; /* Strict upper bound to prevent stretching on desktop */
+    
+    /* Cartoonish 3D Glossy Styling to Match Your Theme Popups */
+    background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+    border: 3px solid #663914; /* Cartoonish wood/stone border outline */
+    border-radius: 16px;
+    padding: 14px 20px;
+    color: #ffffff;
+    font-weight: 800;
+    font-size: 15px;
+    text-align: center;
+    box-shadow: 0 6px 0 #000000, 0 10px 20px rgba(0, 0, 0, 0.4);
+    
+    /* Smooth Transition Profiles */
+    z-index: 999999; /* Forces it above all popup overlays */
+    visibility: hidden;
+    opacity: 0;
+    transition: bottom 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
+                opacity 0.3s ease, 
+                transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* Slide Up Trigger Class */
+.game-snackbar.show {
+    visibility: visible;
+    opacity: 1;
+    bottom: 30px; /* Bounces nicely 30px from screen bottom edge */
+    transform: translateX(-50%) scale(1); /* Bouncy micro-interaction snap */
+}
+
+/* Extra Micro Screens Override Optimization (Eg: 320px width viewports) */
+@media screen and (max-width: 340px) {
+    .game-snackbar {
+        font-size: 13px !important;
+        padding: 10px 16px !important;
+        width: 90% !important;
+        bottom: 20px;
+    }
+}
+
+/* WINNING MODAL VISUAL BOX LAYOUT WITH ZERO OVERFLOW RULES */
+.win-card {
+    position: relative;
+    width: 90%;
+    max-width: 360px; /* Kept tight to perfectly avoid side cut-offs on 320px screen width */
+    background: linear-gradient(180deg, #ffd36f 0%, #e89833 100%);
+    border: 5px solid #663914;
+    border-radius: 28px;
+    padding: 45px 15px 25px 15px; /* Added extra top spacing to breathe below header ribbon */
+    box-shadow: 0 12px 0 #422209, 0 20px 30px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-sizing: border-box;
+    margin: auto;
+}
+
+/* 3D POPPING FLOATING HEADER RIBBON FOR POPUPS */
+.win-header-banner {
+    position: absolute;
+    top: -24px; /* Perfectly floats centered above top edge framework boundary lines */
+    left: 50%;
+    transform: translateX(-50%) rotate(-1deg);
+    width: 85%;
+    background: linear-gradient(180deg, #4ade80 0%, #16a34a 100%);
+    color: #ffffff;
+    font-size: clamp(20px, 6vw, 26px); /* Adaptive text layout matrix */
+    font-weight: 900;
+    text-transform: uppercase;
+    text-align: center;
+    padding: 10px 10px;
+    border: 4px solid #663914;
+    border-radius: 18px;
+    box-shadow: 0 6px 0 #14532d, 0 8px 15px rgba(0, 0, 0, 0.3);
+    text-shadow: 2px 2px 0px #14532d;
+    white-space: nowrap;
+}
+
+/* HIGHLY APPEALING KIDS REWARD HUB ELEMENT CONTAINER */
+.win-reward-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: #422209; /* Deep wooden inner cutout frame container look */
+    border: 3px solid #663914;
+    border-radius: 20px;
+    width: 100%;
+    padding: 20px 10px;
+    margin: 15px 0 20px 0;
+    box-shadow: inset 0 4px 10px rgba(0, 0, 0, 0.5);
+    box-sizing: border-box;
+}
+
+.reward-amount {
+    font-size: 46px;
+    font-weight: 900;
+    color: #facc15; /* Bright yellow neon coin text style factor */
+    text-shadow: 3px 3px 0px #000, 0 0 15px rgba(250, 204, 21, 0.4);
+    line-height: 1;
+}
+
+.reward-label {
+    font-size: 14px;
+    font-weight: 900;
+    color: #ffd36f;
+    letter-spacing: 2px;
+    margin-top: 5px;
+    text-shadow: 1px 1px 0px #000;
+}
+
+/* JELLY POPPING PLAY AGAIN CONSOLE ACTION CTA BUTTON */
+.action-play-btn {
+    width: 100%;
+    height: 58px;
+    font-size: 22px;
+    font-weight: 900;
+    color: #ffffff;
+    text-transform: uppercase;
+    background: linear-gradient(180deg, #ff4e4e 0%, #dc2626 100%);
+    border: 4px solid #663914;
+    border-radius: 18px;
+    box-shadow: 0 6px 0 #7f1d1d, 0 10px 15px rgba(0, 0, 0, 0.2);
+    text-shadow: 2px 2px 0px #7f1d1d;
+    cursor: pointer;
+    transition: transform 0.1s ease, box-shadow 0.1s ease;
+    box-sizing: border-box;
+}
+
+.action-play-btn:hover {
+    transform: scale(1.02);
+}
+
+.action-play-btn:active {
+    transform: translateY(4px);
+    box-shadow: 0 2px 0 #7f1d1d;
+}
+
+#stats-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px; /* Fluid space between pill containers */
+    padding: 0 16px;
+    width: 100%;
+    max-width: 380px;
+    margin: 15px auto;
+    box-sizing: border-box;
+}
+
+.stat-pill {
+    display: flex;
+    align-items: center;
+    background: #ffffff; /* Bright pop container background contrast */
+    border: 3px solid #663914; /* Unnoda brand brown outline border color matching */
+    border-radius: 30px; /* Modern pill capsule layout curves structure */
+    padding: 4px 12px 4px 6px; /* Extra breathing space on right side for long numbers */
+    flex: 1; /* Automatically expands evenly but dynamically expands text content */
+    min-width: 0;
+    height: 38px;
+    box-shadow: 0 4px 0 #663914; /* Chunky comic design box shadow matching */
+    box-sizing: border-box;
+}
+
+/* Optional: Individual pill light shading presets to boost readability */
+.coin-pill { background: #fffdf2; }
+.win-pill  { background: #fdfbfa; }
+.game-pill { background: #fafbfe; }
+
+.stat-icon {
+    font-size: 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 1px;
+    background: #663914; /* Nested coin layer circular layout backup text style */
+    color: #fff;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    transform: scale(1.15); /* Gives that extra pop look */
+}
+
+/* Emoji handles style tuning if background wrapper circle isn't needed */
+.stat-icon {
+    background: transparent !important;
+    font-size: 15px;
+    width: auto;
+    height: auto;
+    transform: none;
+}
+
+.stat-value {
+    font-family: sans-serif; /* Change to your exact gaming font variable if available */
+    font-weight: 900;
+    font-size: 13px; /* Perfect scaled balance on 3-digits text flow rendering */
+    color: #402008;
+    flex: 1;
+    text-align: center;
+    white-space: nowrap;
+    overflow: visible; /* FIXED: Never chops numbers or cuts edges! */
+}

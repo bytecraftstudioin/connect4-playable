@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connect 4 Challenge</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <div id="home-screen">
+        <h1>Connect 4 Challenge</h1>
+
+        <div id="stats-bar">
+    <div class="stat-pill coin-pill">
+        <span class="stat-icon">🪙</span>
+        <span id="coins" class="stat-value">0</span>
+    </div>
+    <div class="stat-pill win-pill">
+        <span class="stat-icon">🏆</span>
+        <span id="wins" class="stat-value">0</span>
+    </div>
+    <div class="stat-pill game-pill">
+        <span class="stat-icon">🎮</span>
+        <span id="games" class="stat-value">0</span>
+    </div>
+</div>
+
+        <div class="difficulty-container">
+            <label>Difficulty:</label>
+            <select id="difficulty">
+                <option value="easy">Easy</option>
+                <option value="medium">Medium</option>
+                <option value="hard" selected>Hard</option>
+            </select>
+        </div>
+
+        <button id="playBtn">▶ Play Game</button>
+        <button id="dailyBtn" class="menu-btn">🎁 Daily Reward</button>
+        <button id="storeBtn" class="menu-btn">🏪 Theme Store</button>
+        <button id="statsBtn" class="menu-btn">📊 Statistics & History</button>
+    </div>
+
+    <div id="daily-popup" class="hidden">
+        <div class="popup-content">
+            <div class="reward-ribbon">Daily Reward</div>
+            
+            <div class="daily-grid">
+                <div class="day-box" id="day1"><span>Day 1</span><span class="reward-coin">🪙</span><span class="reward-amt">+50</span></div>
+                <div class="day-box" id="day2"><span>Day 2</span><span class="reward-coin">🪙</span><span class="reward-amt">+50</span></div>
+                <div class="day-box" id="day3"><span>Day 3</span><span class="reward-coin">🪙</span><span class="reward-amt">+50</span></div>
+                <div class="day-box" id="day4"><span>Day 4</span><span class="reward-coin">🪙</span><span class="reward-amt">+50</span></div>
+                <div class="day-box" id="day5"><span>Day 5</span><span class="reward-coin">🪙</span><span class="reward-amt">+50</span></div>
+                <div class="day-box" id="day6"><span>Day 6</span><span class="reward-coin">🪙</span><span class="reward-amt">+50</span></div>
+                
+                <div class="day-box mega-day" id="day7">
+                    <span>Day 07 MEGA</span>
+                    <span class="reward-coin">👑🪙</span>
+                    <span class="reward-amt">+100</span>
+                </div>
+            </div>
+
+            <button id="claimRewardBtn">Claim Reward</button>
+            <button id="closeDailyBtn">CLOSE WINDOW</button>
+        </div>
+    </div>
+
+    <div id="game-screen" class="hidden">
+        <h2>Connect 4</h2>
+        <div id="turn-indicator" class="player-turn">Your Turn 🔴</div>
+        <div id="board"></div>
+        <button id="backBtn">⬅ Back To Home</button>
+    </div>
+
+    <div id="store-popup" class="hidden">
+        <div class="popup-content">
+            <div class="reward-ribbon blue-ribbon">Theme Store</div>
+            <div class="store-grid" style="margin-top: 30px;">
+                <button onclick="buyTheme('classic',0)">Classic (Free)</button>
+                <button onclick="buyTheme('neon',100)">Neon (100 🪙)</button>
+                <button onclick="buyTheme('gold',250)">Gold (250 🪙)</button>
+                <button onclick="buyTheme('space',500)">Space (500 🪙)</button>
+            </div>
+            <button id="closeStoreBtn" class="close-text-btn">CLOSE WINDOW</button>
+        </div>
+    </div>
+
+    <div id="stats-popup" class="hidden">
+        <div class="popup-content">
+            <div class="reward-ribbon purple-ribbon">Match History</div>
+            <div id="history-list" style="margin-top: 35px; border: 3px solid #663914;"></div>
+            <button id="closeStatsBtn" class="close-text-btn" style="margin-top: 15px;">CLOSE WINDOW</button>
+        </div>
+    </div>
+
+    <!-- UPGRADED WIN / GAME OVER POPUP -->
+    <div id="popup" class="hidden">
+        <div class="popup-content win-card">
+            <!-- Top Floating Header Banner Ribbon -->
+            <div id="popup-title" class="win-header-banner">🎉 YOU WIN!</div>
+            
+            <!-- Center Focus Dynamic Reward Display Box Area -->
+            <div class="win-reward-body">
+                <span class="reward-amount">+50</span>
+                <span class="reward-label">COINS</span>
+            </div>
+            
+            <!-- Bottom Primary Jelly Action CTA Button -->
+            <button id="restartBtn" class="action-play-btn">PLAY AGAIN</button>
+        </div>
+    </div>
+    
+    <script src="js/game.js"></script>
+</body>
+</html>
