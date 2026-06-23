@@ -5,70 +5,57 @@ const boardElement = document.getElementById("board");
 let currentPlayer = "player";
 let board = Array.from({ length: ROWS }, () => Array(COLS).fill(null));
 
+// UI Elements
 const dropdownTrigger = document.getElementById("dropdownTrigger");
 const dropdownOptions = document.getElementById("dropdownOptions");
 const selectedText = document.getElementById("selectedDifficultyText");
 
-// --- UPGRADED AUDIO SYSTEM WITH AUTO-LOOP BGM MANAGER ---
+// CUSTOM DROPDOWN STATE CORE
+let selectedDifficultyValue = "easy"; 
+
+// --- FULLY OPTIMIZED AUDIO TRACK MATRIX ---
 const sounds = {
     drop: new Audio('assets/sounds/disc_drop.mp3'),
     click: new Audio('assets/sounds/ui_click.mp3'),
     coin: new Audio('assets/sounds/coin_collect.mp3'),
     win: new Audio('assets/sounds/game_win.mp3'),
     lose: new Audio('assets/sounds/game_lose.mp3'),
-    bgm: new Audio('assets/sounds/home_theme.mp3') // Added Home Theme BGM track
+    bgm: new Audio('assets/sounds/home_theme.mp3') 
 };
 
-dropdownTrigger.addEventListener("click", (e) => {
-    e.stopPropagation(); // Prevents instant closing
-    if (typeof playSound === "function") playSound('click'); // Plays click sound if loaded
-    dropdownOptions.classList.toggle("hidden");
-});
-
-document.querySelectorAll(".dropdown-option").forEach(option => {
-    option.addEventListener("click", (e) => {
-        const val = e.target.getAttribute("data-value");
-        selectedText.textContent = e.target.textContent;
-        
-        // Mocking native select value storage mapping
-        // game engine difficultySelect dynamic configuration reference override:
-        difficultySelect.value = val; 
-
-        dropdownOptions.classList.add("hidden");
-        if (typeof playSound === "function") playSound('click');
-    });
-});
-
-// Close dropdown automatically if user clicks anywhere else outside the menu box
-document.addEventListener("click", () => {
-    dropdownOptions.classList.add("hidden");
-});
-
-// --- CORE FIX: COMPATIBILITY LAYER FOR GAME ENGINE ---
-// Game engine script difficultySelect select variables use பண்ணுது, so fake wrapper variable set பண்றோம்:
-let difficultySelect = { value: "easy" }; // Default core level configuration node
-
-// Configure background music setup properties
-sounds.bgm.loop = true;  // Loops indefinitely
-sounds.bgm.volume = 0.25; // Lower volume so it stays in background pleasantly
+// Global Autoplay Configuration Settings
+sounds.bgm.loop = true;  
+sounds.bgm.volume = 0.20; 
 
 let isBgmPlaying = false;
 
-// Safe Audio Core Trigger Matrix
+// Dynamic Interaction Fallback Trigger
 function playSound(type) {
     if (sounds[type]) {
-        sounds[type].currentTime = 0; 
-        sounds[type].volume = 0.5;    
-        sounds[type].play().catch(e => console.log("Audio streaming blocked until user interaction sequence"));
+        try {
+            sounds[type].currentTime = 0; 
+            sounds[type].volume = 0.5;    
+            let playPromise = sounds[type].play();
+            
+            if (playPromise !== undefined) {
+                playPromise.catch(error => {
+                    console.log(`Audio system blocked track: ${type}. Needs user gesture.`);
+                });
+            }
+        } catch (e) {
+            console.log("Audio crash fallback", e);
+        }
     }
 }
 
-// Global safe trigger to start background music after first ever user tap interaction
+// BGM Initializing Engine
 function startBGM() {
     if (!isBgmPlaying) {
         sounds.bgm.play()
-            .then(() => { isBgmPlaying = true; })
-            .catch(e => console.log("BGM autoplay policy fallback lock activated"));
+            .then(() => { 
+                isBgmPlaying = true; 
+            })
+            .catch(e => console.log("BGM autoplay waiting for active interaction tap"));
     }
 }
 
@@ -96,64 +83,65 @@ let wins = Number(localStorage.getItem("wins")) || 0;
 let games = Number(localStorage.getItem("games")) || 0;
 let currentTheme = localStorage.getItem("selectedTheme") || "classic"; 
 let matchHistory = JSON.parse(localStorage.getItem("matchHistory")) || [];
-
-// Permanent Ownership Array Database
 let ownedThemes = JSON.parse(localStorage.getItem("ownedThemes")) || ["classic"];
 
 const coinsEl = document.getElementById("coins");
 const winsEl = document.getElementById("wins");
 const gamesEl = document.getElementById("games");
-const difficultySelect = document.getElementById("difficulty");
 
 // Daily Reward Elements
 const dailyPopup = document.getElementById("daily-popup");
 const closeDailyBtn = document.getElementById("closeDailyBtn");
 const claimRewardBtn = document.getElementById("claimRewardBtn");
 
-// LocalStorage data handle
 let lastClaimDate = localStorage.getItem("lastClaimDate") || null;
 let currentStreak = Number(localStorage.getItem("currentStreak")) || 0; 
 
 // Open Daily Reward Popup
-dailyBtn.addEventListener("click", () => {
-    startBGM(); // Safely triggers loop context if not active
-    playSound('click');
-    checkStreakValidity(); 
-    updateDailyUI();
-    dailyPopup.classList.remove("hidden");
-});
+if (dailyBtn) {
+    dailyBtn.addEventListener("click", () => {
+        startBGM(); 
+        playSound('click');
+        checkStreakValidity(); 
+        updateDailyUI();
+        dailyPopup.classList.remove("hidden");
+    });
+}
 
-closeDailyBtn.addEventListener("click", () => {
-    playSound('click');
-    dailyPopup.classList.add("hidden");
-});
+if (closeDailyBtn) {
+    closeDailyBtn.addEventListener("click", () => {
+        playSound('click');
+        dailyPopup.classList.add("hidden");
+    });
+}
 
 // Main Claim Logic
-claimRewardBtn.addEventListener("click", () => {
-    if (!canClaimToday()) {
-        showSnackbar("❌ You have already claimed today's reward! Come back tomorrow.");
-        return;
-    }
+if (claimRewardBtn) {
+    claimRewardBtn.addEventListener("click", () => {
+        if (!canClaimToday()) {
+            showSnackbar("❌ You have already claimed today's reward! Come back tomorrow.");
+            return;
+        }
 
-    playSound('coin'); 
-    let nextDay = currentStreak + 1;
-    let rewardAmount = (nextDay === 7) ? 100 : 50;
+        playSound('coin'); 
+        let nextDay = currentStreak + 1;
+        let rewardAmount = (nextDay === 7) ? 100 : 50;
 
-    coins += rewardAmount;
-    currentStreak = nextDay === 7 ? 0 : nextDay; 
-    lastClaimDate = new Date().toDateString(); 
+        coins += rewardAmount;
+        currentStreak = nextDay === 7 ? 0 : nextDay; 
+        lastClaimDate = new Date().toDateString(); 
 
-    localStorage.setItem("currentStreak", currentStreak);
-    localStorage.setItem("lastClaimDate", lastClaimDate);
-    
-    updateStats();
-    updateDailyUI();
+        localStorage.setItem("currentStreak", currentStreak);
+        localStorage.setItem("lastClaimDate", lastClaimDate);
+        
+        updateStats();
+        updateDailyUI();
 
-    showSnackbar(`🎉 Successfully Claimed Day ${nextDay} Reward: +${rewardAmount} Coins!`);
-    dailyPopup.classList.add("hidden");
-});
+        showSnackbar(`🎉 Successfully Claimed Day ${nextDay} Reward: +${rewardAmount} Coins!`);
+        dailyPopup.classList.add("hidden");
+    });
+}
 
-// Helper Functions
 function canClaimToday() {
     let today = new Date().toDateString();
     return lastClaimDate !== today;
@@ -161,13 +149,10 @@ function canClaimToday() {
 
 function checkStreakValidity() {
     if (!lastClaimDate) return;
-
     let today = new Date();
     let lastClaim = new Date(lastClaimDate);
-    
     const diffTime = Math.abs(today - lastClaim);
     const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-
     if (diffDays > 1) {
         currentStreak = 0;
         localStorage.setItem("currentStreak", currentStreak);
@@ -181,9 +166,7 @@ function updateDailyUI() {
     for (let i = 1; i <= 7; i++) {
         let box = document.getElementById(`day${i}`);
         if (!box) continue;
-        
         box.className = (i === 7) ? "day-box mega-day" : "day-box";
-        
         if (i < nextDayToClaim) {
             box.classList.add("claimed");
         } else if (i === nextDayToClaim) {
@@ -197,61 +180,77 @@ function updateDailyUI() {
         }
     }
 
-    if (availableToClaim) {
-        claimRewardBtn.removeAttribute("disabled");
-        claimRewardBtn.textContent = `Claim Day ${nextDayToClaim} Bonus!`;
-    } else {
-        claimRewardBtn.setAttribute("disabled", "true");
-        claimRewardBtn.textContent = "Come Back Tomorrow!";
+    if (claimRewardBtn) {
+        if (availableToClaim) {
+            claimRewardBtn.removeAttribute("disabled");
+            claimRewardBtn.textContent = `Claim Day ${nextDayToClaim} Bonus!`;
+        } else {
+            claimRewardBtn.setAttribute("disabled", "true");
+            claimRewardBtn.textContent = "Come Back Tomorrow!";
+        }
     }
 }
 
-// Event Listeners Navigation
-playBtn.addEventListener("click", () => {
-    startBGM(); // Start background track loops safely on primary action click
-    playSound('click');
-    resetGameData();
-    homeScreen.classList.add("hidden");
-    gameScreen.classList.remove("hidden");
-    updateTurnUI();
-});
+// Navigation Triggers
+if (playBtn) {
+    playBtn.addEventListener("click", () => {
+        startBGM(); 
+        playSound('click');
+        resetGameData();
+        homeScreen.classList.add("hidden");
+        gameScreen.classList.remove("hidden");
+        updateTurnUI();
+    });
+}
 
-document.getElementById("backBtn").addEventListener("click", () => {
-    playSound('click');
-    gameScreen.classList.add("hidden");
-    homeScreen.classList.remove("hidden");
-});
+const backBtn = document.getElementById("backBtn");
+if (backBtn) {
+    backBtn.addEventListener("click", () => {
+        playSound('click');
+        gameScreen.classList.add("hidden");
+        homeScreen.classList.remove("hidden");
+    });
+}
 
-// Popups triggers with Store Synchronization Engine
-storeBtn.addEventListener("click", () => {
-    startBGM(); // Triggers continuous fallback music thread on store popup launch
-    playSound('click');
-    updateStoreUI(); 
-    storePopup.classList.remove("hidden");
-});
+if (storeBtn) {
+    storeBtn.addEventListener("click", () => {
+        startBGM(); 
+        playSound('click');
+        updateStoreUI(); 
+        storePopup.classList.remove("hidden");
+    });
+}
 
-closeStoreBtn.addEventListener("click", () => {
-    playSound('click');
-    storePopup.classList.add("hidden");
-});
+if (closeStoreBtn) {
+    closeStoreBtn.addEventListener("click", () => {
+        playSound('click');
+        storePopup.classList.add("hidden");
+    });
+}
 
-statsBtn.addEventListener("click", () => {
-    startBGM(); // Triggers continuous fallback music thread on stats popup launch
-    playSound('click');
-    renderHistory();
-    statsPopup.classList.remove("hidden");
-});
+if (statsBtn) {
+    statsBtn.addEventListener("click", () => {
+        startBGM(); 
+        playSound('click');
+        renderHistory();
+        statsPopup.classList.remove("hidden");
+    });
+}
 
-closeStatsBtn.addEventListener("click", () => {
-    playSound('click');
-    statsPopup.classList.add("hidden");
-});
+if (closeStatsBtn) {
+    closeStatsBtn.addEventListener("click", () => {
+        playSound('click');
+        statsPopup.classList.add("hidden");
+    });
+}
 
-restartBtn.addEventListener("click", () => {
-    playSound('click');
-    popup.classList.add("hidden");
-    resetGameData();
-});
+if (restartBtn) {
+    restartBtn.addEventListener("click", () => {
+        playSound('click');
+        popup.classList.add("hidden");
+        resetGameData();
+    });
+}
 
 function resetGameData() {
     board = Array.from({ length: ROWS }, () => Array(COLS).fill(null));
@@ -262,9 +261,9 @@ function resetGameData() {
 }
 
 function updateStats() {
-    coinsEl.textContent = coins;
-    winsEl.textContent = wins;
-    gamesEl.textContent = games;
+    if (coinsEl) coinsEl.textContent = coins;
+    if (winsEl) winsEl.textContent = wins;
+    if (gamesEl) gamesEl.textContent = games;
     localStorage.setItem("coins", coins);
     localStorage.setItem("wins", wins);
     localStorage.setItem("games", games);
@@ -273,6 +272,7 @@ function updateStats() {
 }
 
 function updateTurnUI() {
+    if (!turnIndicator) return;
     if (currentPlayer === "player") {
         turnIndicator.textContent = "Your Turn 🔴";
         turnIndicator.className = "player-turn";
@@ -283,6 +283,7 @@ function updateTurnUI() {
 }
 
 function createBoardUI() {
+    if (!boardElement) return;
     for (let row = 0; row < ROWS; row++) {
         for (let col = 0; col < COLS; col++) {
             const cell = document.createElement("div");
@@ -337,9 +338,8 @@ function dropDisc(col) {
     }
 }
 
-// AI Engine
 function aiMove() {
-    const difficulty = difficultySelect.value;
+    const difficulty = selectedDifficultyValue; 
     let selectedCol = null;
 
     if (difficulty === "medium" || difficulty === "hard") {
@@ -383,7 +383,6 @@ function aiMove() {
 function endGame(outcome) {
     games += 1;
     let statusText = "";
-    
     const popupRewardBody = document.querySelector("#popup .win-reward-body");
     const popupActionBtn = document.getElementById("restartBtn");
 
@@ -392,40 +391,39 @@ function endGame(outcome) {
         wins += 1;
         statusText = "🎉 YOU WIN!";
         matchHistory.unshift({ result: "Won", details: "+50 Coins", date: new Date().toLocaleDateString() });
-        
         if (popupRewardBody) popupRewardBody.style.display = "flex"; 
-        popupTitle.className = "win-header-banner"; 
-        popupActionBtn.textContent = "PLAY AGAIN";
-        playSound('win'); 
+        if (popupTitle) popupTitle.className = "win-header-banner"; 
+        if (popupActionBtn) popupActionBtn.textContent = "PLAY AGAIN";
         
+        // 🔥 FIX: Trigger Game Win Sound explicitly here!
+        playSound('win'); 
     } else if (outcome === "ai") {
         statusText = "🤖 AI WINS!";
         matchHistory.unshift({ result: "Lost", details: "VS AI", date: new Date().toLocaleDateString() });
-        
         if (popupRewardBody) popupRewardBody.style.display = "none"; 
-        popupTitle.className = "reward-ribbon win-header-banner"; 
-        popupActionBtn.textContent = "TRY AGAIN?";
+        if (popupTitle) popupTitle.className = "reward-ribbon win-header-banner"; 
+        if (popupActionBtn) popupActionBtn.textContent = "TRY AGAIN?";
+        
+        // 🔥 FIX: Trigger Game Lose Sound explicitly here!
         playSound('lose'); 
-
     } else {
         statusText = "🤝 DRAW!";
         matchHistory.unshift({ result: "Draw", details: "Tie Game", date: new Date().toLocaleDateString() });
-        
         if (popupRewardBody) popupRewardBody.style.display = "none"; 
-        popupTitle.className = "reward-ribbon blue-ribbon win-header-banner"; 
-        popupActionBtn.textContent = "NEW GAME";
+        if (popupTitle) popupTitle.className = "reward-ribbon blue-ribbon win-header-banner"; 
+        if (popupActionBtn) popupActionBtn.textContent = "NEW GAME";
         playSound('click'); 
     }
 
     if (matchHistory.length > 5) matchHistory.pop(); 
     updateStats();
-    
-    popupTitle.textContent = statusText;
-    popup.classList.remove("hidden");
+    if (popupTitle) popupTitle.textContent = statusText;
+    if (popup) popup.classList.remove("hidden");
 }
 
 function renderHistory() {
     const container = document.getElementById("history-list");
+    if (!container) return;
     container.innerHTML = "";
     if (matchHistory.length === 0) {
         container.innerHTML = "<p style='color: #94a3b8;'>No matches played yet!</p>";
@@ -443,10 +441,8 @@ function renderHistory() {
     });
 }
 
-// Visual Theme Store Rendering Setup
 function updateStoreUI() {
     const activeTheme = localStorage.getItem("selectedTheme") || "classic";
-    
     const themeButtons = {
         'classic': document.querySelector("button[onclick*='classic']"),
         'neon': document.querySelector("button[onclick*='neon']"),
@@ -473,7 +469,6 @@ function updateStoreUI() {
             if (themeKey === 'neon') btn.innerHTML = "Neon (100 🪙)";
             if (themeKey === 'gold') btn.innerHTML = "Gold (250 🪙)";
             if (themeKey === 'space') btn.innerHTML = "Space (500 🪙)";
-            
             btn.style.opacity = "1";
             btn.style.cursor = "pointer";
             btn.removeAttribute("disabled");
@@ -526,7 +521,6 @@ function getWinningMove(player) {
     return null;
 }
 
-// Theme Equipping and Purchase Processing Engine
 window.buyTheme = function(themeName, price) {
     if (ownedThemes.includes(themeName)) {
         playSound('click');
@@ -538,24 +532,20 @@ window.buyTheme = function(themeName, price) {
     }
 
     if (coins >= price) {
+        // 🔥 FIX: Trigger Coin Collect sound on successful theme unlock!
         playSound('coin'); 
         if (price > 0) {
             coins -= price; 
             updateStats(); 
-            
-            const coinsEl = document.getElementById("coins");
-            if (coinsEl) coinsEl.textContent = coins;
         }
-        
         ownedThemes.push(themeName);
         localStorage.setItem("ownedThemes", JSON.stringify(ownedThemes));
-
         localStorage.setItem("selectedTheme", themeName);
         applyThemeToBoard(themeName);
         updateStoreUI(); 
-        
-        showSnackbar(`🎉 ${themeName.toUpperCase()} Theme Purchased & Applied!`);
+        showSnackbar(`🎉 ${themeName.toUpperCase()} Theme Purchased!`);
     } else {
+        playSound('click'); // Reject click audio setup
         showSnackbar("⚠️ Not Enough Coins, Machan!");
     }
 }
@@ -563,58 +553,37 @@ window.buyTheme = function(themeName, price) {
 function applyThemeToBoard(themeName) {
     const boardElement = document.getElementById("board");
     if (boardElement) {
-        boardElement.classList.remove("classic", "neon", "gold", "space");
-        boardElement.classList.add(themeName);
+        boardElement.className = "board " + themeName;
     }
     document.body.className = `current-theme-${themeName}`;
 }
 
-// Inline Snackbar Injection Engine
+// Optimized JavaScript Function to Sync perfectly with your Premium CSS Snackbar System
 function showSnackbar(message) {
+    // 1. Unakku munaadiyedhavadhu old toast screen ulla irundha adha clear panrom
     const oldToast = document.querySelector('.game-snackbar');
     if (oldToast) oldToast.remove();
-
+    
+    // 2. Dynamic ah oru div create panni un class name ah bind panrom
     const snackbar = document.createElement('div');
     snackbar.className = 'game-snackbar';
     snackbar.innerText = message;
     
-    Object.assign(snackbar.style, {
-        position: 'fixed',
-        bottom: '25px',
-        left: '50%',
-        transform: 'translateX(-50%) translateY(100px) scale(0.9)',
-        backgroundColor: '#1e293b',
-        color: '#ffffff',
-        padding: '14px 20px',
-        borderRadius: '16px',
-        boxShadow: '0 6px 0 #000000, 0 10px 20px rgba(0, 0, 0, 0.4)',
-        fontSize: '15px',
-        fontFamily: 'sans-serif',
-        fontWeight: '800',
-        zIndex: '999999',
-        width: '85%',
-        maxWidth: '340px',
-        textAlign: 'center',
-        opacity: '0',
-        border: '3px solid #663914',
-        transition: 'transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease'
-    });
-
     document.body.appendChild(snackbar);
-
+    
+    // 3. Un CSS rule kulla irukura bounce animation trigger panna '.show' class ah inject panrom!
     setTimeout(() => { 
-        snackbar.style.transform = 'translateX(-50%) translateY(0) scale(1)';
-        snackbar.style.opacity = '1';
+        snackbar.classList.add('show');
     }, 50);
-
+    
+    // 4. Correct-ah 3 seconds kalichu automatic ah slide down panni destroy panni thalliduvom
     setTimeout(() => {
-        snackbar.style.transform = 'translateX(-50%) translateY(100px) scale(0.9)';
-        snackbar.style.opacity = '0';
-        setTimeout(() => { snackbar.remove(); }, 400);
+        snackbar.classList.remove('show');
+        setTimeout(() => { snackbar.remove(); }, 400); // Wait for your CSS ease-transition to finish
     }, 3000);
 }
 
-// Core App Initialization Hook Sets
+// Core Initialization Hook Sets
 window.addEventListener("DOMContentLoaded", () => {
     updateStats();
     const savedTheme = localStorage.getItem("selectedTheme") || "classic";
@@ -622,6 +591,35 @@ window.addEventListener("DOMContentLoaded", () => {
     createBoardUI();
     updateStoreUI(); 
 
-    // Global click listener to catch the very first click on document to kickstart background track safely
-    document.addEventListener('click', startBGM, { once: true });
+    // Safe Interaction BGM activation logic code
+    const forceBGMPlay = () => {
+        startBGM();
+        document.removeEventListener('click', forceBGMPlay);
+        document.removeEventListener('touchstart', forceBGMPlay);
+    };
+    document.addEventListener('click', forceBGMPlay);
+    document.addEventListener('touchstart', forceBGMPlay);
+
+    // Dropdown handling hook safe configuration
+    if (dropdownTrigger && dropdownOptions) {
+        dropdownTrigger.addEventListener("click", (e) => {
+            e.stopPropagation();
+            playSound('click');
+            dropdownOptions.classList.toggle("hidden");
+        });
+
+        document.querySelectorAll(".dropdown-option").forEach(option => {
+            option.addEventListener("click", (e) => {
+                const val = e.target.getAttribute("data-value");
+                selectedText.textContent = e.target.textContent;
+                selectedDifficultyValue = val; 
+                dropdownOptions.classList.add("hidden");
+                playSound('click');
+            });
+        });
+
+        document.addEventListener("click", () => {
+            dropdownOptions.classList.add("hidden");
+        });
+    }
 });
